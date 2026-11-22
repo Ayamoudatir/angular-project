@@ -1,0 +1,15 @@
+<div class="app-shell">
+  <header class="topbar">
+    <a class="brand" routerLink="/home" aria-label="Inset, accueil">
+      <span class="brand-mark"><i class="bi bi-grid-1x2-fill"></i></span>
+      <span>inset<span class="brand-dot">.</span><small>PRODUCT STUDIO</small></span>
+    </a>
+    <nav class="main-nav" aria-label="Navigation principale">
+      <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"><i class="bi bi-house-door"></i> Accueil</a>
+      <a routerLink="/products" routerLinkActive="active"><i class="bi bi-box-seam"></i> Produits</a>
+    </nav>
+    <div class="topbar-right"><span class="online-dot"></span> API locale <span class="avatar">IS</span></div>
+  </header>
+  <main><router-outlet /></main>
+  <footer class="footer"><span>INSET · Gestion de catalogue</span><span>Projet pratique Angular 19</span></footer>
+</div>

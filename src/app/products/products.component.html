@@ -1,0 +1,37 @@
+<section class="products-page">
+  <div class="page-heading">
+    <div><div class="eyebrow"><span></span> VOTRE ESPACE</div><h1>Catalogue <em>produits</em></h1><p>Gérez et retrouvez facilement l’ensemble de vos articles.</p></div>
+    <div class="heading-mark"><i class="bi bi-box-seam"></i></div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card"><span class="stat-icon"><i class="bi bi-boxes"></i></span><div><small>PRODUITS AU TOTAL</small><strong>{{ products.length }}</strong></div></div>
+    <div class="stat-card"><span class="stat-icon selected-icon"><i class="bi bi-bookmark-check"></i></span><div><small>SÉLECTIONNÉS</small><strong>{{ selectedCount }}</strong></div></div>
+    <div class="stat-hint"><i class="bi bi-info-circle"></i> Cliquez sur un statut pour modifier la sélection.</div>
+  </div>
+
+  <div class="catalog-card">
+    <div class="catalog-header"><div><span class="section-kicker">INVENTAIRE</span><h2>Liste des produits</h2></div><label class="search-box"><i class="bi bi-search"></i><input [(ngModel)]="searchTerm" placeholder="Rechercher un produit..." aria-label="Rechercher un produit"><kbd>⌘ K</kbd></label></div>
+
+    @if (noticeMessage) { <div class="notice success-notice"><i class="bi bi-check-circle"></i>{{ noticeMessage }}<button (click)="noticeMessage = ''" aria-label="Fermer">×</button></div> }
+    @if (errorMessage) { <div class="notice error-notice"><i class="bi bi-exclamation-circle"></i>{{ errorMessage }}<button (click)="errorMessage = ''" aria-label="Fermer">×</button></div> }
+
+    <form class="add-form" (ngSubmit)="addProduct()">
+      <div class="add-title"><span><i class="bi bi-plus-lg"></i></span><div><strong>Ajouter un produit</strong><small>Complétez les informations de votre nouvel article</small></div></div>
+      <div class="form-fields"><label>Nom du produit<input name="productName" [(ngModel)]="productName" required maxlength="120" placeholder="Ex. Casque audio sans fil"></label><label>Prix (€)<input name="productPrice" [(ngModel)]="productPrice" type="number" min="0" step="0.01" required placeholder="0,00"></label><button class="add-button" type="submit" [disabled]="saving || !productName.trim() || productPrice === null"><i class="bi bi-plus-lg"></i> {{ saving ? 'Ajout...' : 'Ajouter' }}</button></div>
+    </form>
+
+    @if (loading) {
+      <div class="loading-state"><span class="spinner-border spinner-border-sm" role="status"></span> Chargement du catalogue...</div>
+    } @else {
+      <div class="table-responsive"><table class="product-table"><thead><tr><th>PRODUIT</th><th>IDENTIFIANT</th><th>PRIX</th><th>STATUT</th><th class="actions-col">ACTIONS</th></tr></thead><tbody>
+        @for (product of filteredProducts; track product.id) {
+          <tr><td><div class="product-name"><span class="product-symbol"><i class="bi bi-box"></i></span><span>{{ product.name }}<small>Article du catalogue</small></span></div></td><td><span class="product-id">#{{ product.id.toString().padStart(3, '0') }}</span></td><td class="price">{{ product.price | currency:'EUR':'symbol':'1.2-2':'fr' }}</td><td><button type="button" class="status-badge" [class.is-selected]="product.selected" (click)="toggleSelection(product)" [attr.aria-pressed]="product.selected" [attr.aria-label]="product.selected ? 'Retirer ' + product.name + ' de la sélection' : 'Sélectionner ' + product.name"><i [class]="product.selected ? 'bi bi-check-circle-fill' : 'bi bi-circle'"></i>{{ product.selected ? 'Sélectionné' : 'Non sélectionné' }}</button></td><td class="actions-col"><button class="delete-button" type="button" (click)="handleDelete(product)" [attr.aria-label]="'Supprimer ' + product.name"><i class="bi bi-trash3"></i></button></td></tr>
+        } @empty {
+          <tr><td colspan="5"><div class="empty-state"><span><i class="bi bi-search"></i></span><strong>{{ searchTerm ? 'Aucun résultat' : 'Votre catalogue est vide' }}</strong><p>{{ searchTerm ? 'Essayez avec un autre nom de produit.' : 'Ajoutez un premier produit avec le formulaire ci-dessus.' }}</p></div></td></tr>
+        }
+      </tbody></table></div>
+      <div class="table-footer"><span>{{ filteredProducts.length }} produit{{ filteredProducts.length > 1 ? 's' : '' }} affiché{{ filteredProducts.length > 1 ? 's' : '' }}</span><span><i class="bi bi-arrow-repeat"></i> Connecté à l’API locale</span></div>
+    }
+  </div>
+</section>
